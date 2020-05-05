@@ -10,19 +10,22 @@ class HashTableEntry:
 
 
 class HashTable:
-    """
-    A hash table that with `capacity` buckets
-    that accepts string keys
 
-    Implement this.
-    """
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.storage = [None] * capacity
 
     def fnv1(self, key):
-        """
-        FNV-1 64-bit hash function
+        total = 14695981039346656037
+        new_key = key.encode()
 
-        Implement this, and/or DJB2.
-        """
+        for x in new_key:
+            total = total * 1099511628211
+            total = total ^ x
+            total &= 0xffffffffffffffff
+        return total    
+
+        
 
     def djb2(self, key):
         """
@@ -35,36 +38,24 @@ class HashTable:
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
+
+        
         """
-        #return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        return self.fnv1(key) % self.capacity
+        # return self.djb2(key) % self.capacity
 
     def put(self, key, value):
-        """
-        Store the value with the given key.
+        index = self.hash_index(key)
+        self.storage[index] = value
 
-        Hash collisions should be handled with Linked List Chaining.
-
-        Implement this.
-        """
 
     def delete(self, key):
-        """
-        Remove the value stored with the given key.
-
-        Print a warning if the key is not found.
-
-        Implement this.
-        """
+        index = self.hash_index(key)
+        self.storage[index] = None
 
     def get(self, key):
-        """
-        Retrieve the value stored with the given key.
-
-        Returns None if the key is not found.
-
-        Implement this.
-        """
+        index = self.hash_index(key)
+        return self.storage[index]
 
     def resize(self):
         """
